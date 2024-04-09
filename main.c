@@ -9,12 +9,23 @@
 int give_extenstion(char *name, int filename_size, char **extenstion);
 char *concat_strings(const char *str1, const char *str2);
 
-int main(){
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        printf("Usage:\n\teg: organize /home/username/Downloads/\n\n!! Dont forget to add the / at the end !!\n");
+        return 1;
+    }
+    else if(!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")){
+        printf("Usage:\n\teg: organize /home/username/Downloads/\n\n!! Dont forget to add the / at the end !!\n");
+        return 1;
+    }
     DIR * direcotory;
     struct dirent * entry;
-    int count = 0;
-    const char * dir = "/home/kethankrk/Downloads/";
+    int count = 0, organize_count = 0;
+    char * dir = argv[1];
     char *extenstion, *dir_with_extension, *final_full_path, *file_full_path;
+    // const char * dir = "/home/kethankrk/Downloads/";
+
+    
     direcotory = opendir(dir);
 
     if(direcotory == NULL){
@@ -40,6 +51,7 @@ int main(){
             file_full_path = concat_strings(dir, entry->d_name);
             rename(file_full_path, final_full_path);
             printf("Successfuly moved the file: %s to dir: %s\n\n\n", file_full_path, final_full_path);
+            organize_count++;
         }
     }
     free(extenstion);
@@ -47,6 +59,13 @@ int main(){
     free(final_full_path);
     free(file_full_path);
     printf("\nFound a total of %d files\n", count);
+
+    if(organize_count == 0){
+        printf("Folder already organized\n");
+    }
+    else{
+        printf("Folder organized successfuly\n");
+    }
     closedir(direcotory);
     return 0;
 }
@@ -72,11 +91,6 @@ int give_extenstion(char *name, int filename_size, char **extenstion){
     return 1;
 }
 
-
-
-
-#include <stdlib.h>
-#include <string.h>
 
 char *concat_strings(const char *str1, const char *str2) {
 
